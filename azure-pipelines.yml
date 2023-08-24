@@ -1,0 +1,30 @@
+resources:
+  repositories:
+  - repository: terraformpractise
+    type: git
+    name: terraformpractise
+    ref: refs/tags/v0.1.9
+
+trigger:
+  branches:
+    include:
+      - master
+      - feature/*
+
+pool:
+  vmImage: windows-latest
+
+stages:
+- stage: CI
+  jobs:
+  - job: Terraform_CI
+    steps:
+    - template: terraform-ci.yml@terraformpractise
+      parameters:
+        workingDirectory: "./example"
+
+- stage: CD 
+  jobs:
+  - job: CD
+    steps:
+      - template: changelog-git-tag-release.yml@terraformpractise
